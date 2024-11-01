@@ -79,6 +79,68 @@ class UserController extends Controller
         return response()->json($jsonResponse);
     }
 
+    function apiServicerRegistration(Request $request)
+    {
+        $rules = [
+            'first_name' => 'required|string|max:100',
+            'last_name'  => 'required|string|max:100',
+            'email'      => 'required|email',
+            'mobile'     => 'required|numeric',
+            'address'    => 'required|string',
+            'password'   => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, []);
+
+        if($validator->fails())
+        {
+
+            $responseArray = [
+                "status"    =>  false,
+                "message"   =>  "Unable to perform this action!",
+                "data"      =>  $validator->messages()
+            ];
+
+            return response()->json($responseArray);
+
+        }
+
+        $user = new User();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->mobile = $request->mobile;
+        $user->address = $request->address;
+        $user->user_type = 3;
+
+        $pass = bcrypt($request->password);
+
+        $user->password = $pass;
+        $user->user_unique = rand(100000, 999999);
+        $is_registered = $user->save();
+
+        if($is_registered)
+        {
+            Mail::to($request->email)->send(new UserRegistrationMail());
+            Mail::to(ADMIN_MAIL)->send(new UserRegistrationMail());
+
+            $jsonResponse = array(
+                'status'    =>  true,
+                'message'   =>  "User registerd successfully!",
+                'data'      =>  $user
+            );
+
+            return response()->json($jsonResponse);
+        }
+        $jsonResponse = array(
+            'status'    =>  false,
+            'message'   =>  "Unable to register user!",
+            'data'      =>  []
+        );
+
+        return response()->json($jsonResponse);
+    }
+
     //User Approval
     function apiUserApproval(Request $request)
     {

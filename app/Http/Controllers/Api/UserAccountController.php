@@ -146,4 +146,70 @@ class UserAccountController extends Controller
             }
         }
     }
+
+    function apiPostServicerLogin(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'email'     => 'required',
+            'password'  => 'required',
+        ]);
+
+        if($validator->fails()) {
+
+            $jsonResponse = array(
+                'status'    =>  false,
+                'message'   =>  "Unable to perform this action!",
+                'data'      =>  $validator->messages()
+            );
+
+            return response()->json($jsonResponse);
+
+        } else {
+
+            $authArray = array(
+                'email'     =>  $request->email,
+                'password'  =>  $request->password,
+                'user_type' =>  3
+            );
+
+            if(Auth::attempt($authArray)) {
+
+                $authUser = Auth::user();
+                if(Auth::user()->user_type!=3)
+                {
+                    $jsonResponse = array(
+                        'status'    =>  false,
+                        'message'   =>  "Unable to perform this action!",
+                        'data'      =>  [
+                            "error" =>  ["User details not found, please try again"]
+                        ]
+                    );
+    
+                    return response()->json($jsonResponse);
+                }
+
+                $jsonResponse = array(
+                    'status'    =>  true,
+                    'message'   =>  'Login Successful!',
+                    'data'      =>  [
+                        'token'     =>  $authUser->createToken(env('APP_NAME'))->plainTextToken
+                    ]
+                );
+
+                return response()->json($jsonResponse);
+
+            } else {
+
+                $jsonResponse = array(
+                    'status'    =>  false,
+                    'message'   =>  "Unable to perform this action!",
+                    'data'      =>  [
+                        "error" =>  ["User details not found, please try again"]
+                    ]
+                );
+
+                return response()->json($jsonResponse);
+            }
+        }
+    }
 }

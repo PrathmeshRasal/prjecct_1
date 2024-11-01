@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckCustomerUser
+class CheckServicer
 {
     /**
      * Handle an incoming request.
@@ -16,10 +16,10 @@ class CheckCustomerUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::guard('sanctum')->user() && Auth::user()->user_type === 1)
+        if(Auth::guard('sanctum')->user() && Auth::user()->user_type === 3)
         {
             return $next($request);
         }
-        return response()->json(['message' => 'Unauthorized: You are not an customer/client.'], 403);
+        return response()->json(['message' => 'Unauthorized: You are not an servicer.'], 403);
     }
 }

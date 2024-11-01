@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->boolean('is_active')->default(0);
             $table->timestamps();
             $table->foreign('product_unique')->references('product_unique')->on('product');
-            $table->foreign('product_variant_id')->references('id')->on('product_variants');
+            $table->foreign('product_variant_id')->references(columns: 'id')->on('product_variants');
         });
     }
 

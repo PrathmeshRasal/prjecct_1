@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\News\Public\PublicNewsController;
 use App\Http\Controllers\Api\PublicProductReviewController;
 use App\Http\Controllers\Api\Slider\Admin\AdminHomePageSliderController;
 use App\Http\Controllers\Api\Slider\Public\PublicHomePageSliderController;
+use App\Http\Controllers\Hariom\CustomerController;
 use App\Http\Controllers\Hariom\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,9 +36,12 @@ use App\Http\Controllers\Api\PublicUserProductFoundFeedbackController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+//Hariom APIs
 Route::prefix('public')->group(function () {
-    //Hariom APIs
     Route::post('/user-registration', [UserController::class, 'apiUserRegistration'])->name('api-public-post-public-user-registration');
+
+    Route::post('/servicer-registration', [UserController::class, 'apiServicerRegistration'])->name('api-public-post-public-servicer-registration');
+
 });
 
 
@@ -48,14 +52,27 @@ Route::prefix('account')->group(function () {
 
     Route::post('user-login', [UserAccountController::class, 'apiPostUserLogin'])->name('api-admin-post-user-login');
 
+    Route::post('servicer-login', [UserAccountController::class, 'apiPostServicerLogin'])->name('api-admin-post-servicer-login');
+
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('user-approval', [UserController::class, 'apiUserApproval']);
+
+    Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-customer-post-update-machine-details');
+
+});
+
+Route::prefix('servicer')->middleware(['auth:sanctum', 'servicer'])->group(function () {
+
+    Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-customer-post-update-machine-details');
+
 });
 
 Route::prefix('customer')->middleware(['auth:sanctum', 'customer'])->group(function () {
-    // Route::post('user-approval', [UserController::class, 'apiUserApproval']);
+    Route::post('/add-machine-details', [CustomerController::class, 'apiAddMachineDetails'])->name('api-customer-post-add-machine-details');
+
+    // Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-customer-post-update-machine-details');
 });
 
 //end hariom APIs

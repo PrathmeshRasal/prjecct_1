@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'only.customers' => \App\Http\Middleware\OnlyCustomersAllowedMiddleware::class,
         // 'customcors' => \App\Http\Middleware\CustomCorsMiddleware::class,
         'customer' => \App\Http\Middleware\CheckCustomerUser::class,
+        'servicer' => \App\Http\Middleware\CheckServicer::class,
     ];
 }
