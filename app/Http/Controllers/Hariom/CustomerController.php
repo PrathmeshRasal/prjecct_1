@@ -126,23 +126,19 @@ class CustomerController extends Controller
                 return response()->json($response);
             }
 
-            $machine = MachineDetail::where('id',$request->id)->first();
+            $machine = MachineDetail::where('id', $request->id)->first();
 
-            if($machine)
-            {
-                if($request->status)
-                {
+            if ($machine) {
+                if ($request->status) {
                     $machine->status = $request->status;
                 }
-                if($request->is_accept)
-                {
+                if ($request->is_accept) {
                     $servicer = Auth::user()->id;
-                     if($request->servicer_id)
-                     {
+                    if ($request->servicer_id) {
                         $servicer = $request->servicer_id;
-                     }
-                     $machine->servicer_id = $servicer;
-                     $machine->status = 2; // in progress
+                    }
+                    $machine->servicer_id = $servicer;
+                    $machine->status = 2; // in progress
                 }
                 $machine->save();
                 $responseArray = [
@@ -150,13 +146,232 @@ class CustomerController extends Controller
                     "message" => "Data updated",
                     "data" => []
                 ];
-    
+
                 return response()->json($responseArray);
             }
 
             $responseArray = [
                 "status" => false,
                 "message" => "Machine details not found",
+                "data" => []
+            ];
+
+            return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiGetServiceRequestList(Request $request)
+    {
+        try {
+            $services = MachineDetail::select('machin_details.*', 'users.first_name', 'users.last_name')
+                ->leftJoin('users', 'users.id', '=', 'machin_details.servicer_id')
+                ->paginate($request->per_page, $request->page)->toArray();
+            // dd($services);
+            // if ($services) {
+
+            $serviceslist['service_requests'] = $services['data'];
+            $serviceslist['current_page'] = $services['current_page'];
+            $serviceslist['per_page'] = $services['per_page'];
+            $serviceslist['total'] = $services['total'];
+            $serviceslist['last_page'] = $services['last_page'];
+
+            $responseArray = [
+                "status" => true,
+                "message" => "service request list found successfully",
+                "data" => $serviceslist
+            ];
+
+            return response()->json($responseArray);
+            // }
+
+            // $serviceslist['products_list'] = $services['data'];
+            // $serviceslist['current_page'] = $services['current_page'];
+            // $serviceslist['per_page'] = $services['per_page'];
+            // $serviceslist['total'] = $services['total'];
+            // $serviceslist['last_page'] = $services['last_page'];
+
+            // $responseArray = [
+            //     "status" => true,
+            //     "message" => "service request list not found",
+            //     "data" => $serviceslist
+            // ];
+
+            // return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiGetServiceRequestOpenList(Request $request)
+    {
+        try {
+            $services = MachineDetail::select('machin_details.*', 'users.first_name', 'users.last_name')
+                ->where('servicer_id', null)
+                ->where('status', 1)
+                ->leftJoin('users', 'users.id', '=', 'machin_details.servicer_id')
+                ->paginate($request->per_page, $request->page)->toArray();
+            // dd($services);
+            // if ($services) {
+
+            $serviceslist['service_requests'] = $services['data'];
+            $serviceslist['current_page'] = $services['current_page'];
+            $serviceslist['per_page'] = $services['per_page'];
+            $serviceslist['total'] = $services['total'];
+            $serviceslist['last_page'] = $services['last_page'];
+
+            $responseArray = [
+                "status" => true,
+                "message" => "service request list found successfully",
+                "data" => $serviceslist
+            ];
+
+            return response()->json($responseArray);
+            // }
+
+            // $serviceslist['products_list'] = $services['data'];
+            // $serviceslist['current_page'] = $services['current_page'];
+            // $serviceslist['per_page'] = $services['per_page'];
+            // $serviceslist['total'] = $services['total'];
+            // $serviceslist['last_page'] = $services['last_page'];
+
+            // $responseArray = [
+            //     "status" => true,
+            //     "message" => "service request list not found",
+            //     "data" => $serviceslist
+            // ];
+
+            // return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiGetServiceRequestAcceptedList(Request $request)
+    {
+        try {
+            $services = MachineDetail::select('machin_details.*', 'users.first_name', 'users.last_name')
+                ->where('servicer_id', Auth::user()->id)
+                ->leftJoin('users', 'users.id', '=', 'machin_details.servicer_id')
+                ->paginate($request->per_page, $request->page)->toArray();
+            // dd($services);
+            // if ($services) {
+
+            $serviceslist['service_requests'] = $services['data'];
+            $serviceslist['current_page'] = $services['current_page'];
+            $serviceslist['per_page'] = $services['per_page'];
+            $serviceslist['total'] = $services['total'];
+            $serviceslist['last_page'] = $services['last_page'];
+
+            $responseArray = [
+                "status" => true,
+                "message" => "service request list found successfully",
+                "data" => $serviceslist
+            ];
+
+            return response()->json($responseArray);
+            // }
+
+            // $serviceslist['products_list'] = $services['data'];
+            // $serviceslist['current_page'] = $services['current_page'];
+            // $serviceslist['per_page'] = $services['per_page'];
+            // $serviceslist['total'] = $services['total'];
+            // $serviceslist['last_page'] = $services['last_page'];
+
+            // $responseArray = [
+            //     "status" => true,
+            //     "message" => "service request list not found",
+            //     "data" => $serviceslist
+            // ];
+
+            // return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiGetServiceRequest(Request $request)
+    {
+        try {
+
+            $rules = [
+                'id' => 'required',
+            ];
+    
+            $errorMessages = [];
+    
+            $validator = Validator::make($request->all(), $rules, $errorMessages);
+    
+            if ($validator->fails()) {
+    
+                $responseArray = [
+                    "status" => false,
+                    "message" => ERROR_MSG_UNABLE_TO_PERFORM_THIS_ACTION,
+                    "data" => $validator->messages()
+                ];
+    
+                return response()->json($responseArray);
+            } 
+            $service = MachineDetail::select('machin_details.*', 'users.first_name', 'users.last_name')
+                ->where('machin_details.id', $request->id)
+                ->leftJoin('users', 'users.id', '=', 'machin_details.servicer_id')
+                ->first();
+            // dd($services);
+            if ($service) {
+
+            $responseArray = [
+                "status" => true,
+                "message" => "service request found successfully",
+                "data" => $service
+            ];
+
+            return response()->json($responseArray);
+            }
+
+            $responseArray = [
+                "status" => true,
+                "message" => "service request not found",
                 "data" => []
             ];
 

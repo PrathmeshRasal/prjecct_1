@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
@@ -210,6 +211,190 @@ class UserAccountController extends Controller
 
                 return response()->json($jsonResponse);
             }
+        }
+    }
+
+    function apiGetCustomerList()
+    {
+        try {
+            $customers = User::where('user_type',1)->get();
+            if(count($customers)>0)
+            {
+                $responseArray = [
+                    "status" => true,
+                    "message" => "customers found successfully",
+                    "data" => $customers
+                ];
+    
+                return response()->json($responseArray);            }
+
+            $responseArray = [
+                "status" => true,
+                "message" => "customers not found",
+                "data" => []
+            ];
+
+            return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiGetServicerList()
+    {
+        try {
+            $servicers = User::where('user_type',3)->get();
+            if(count($servicers)>0)
+            {
+                $responseArray = [
+                    "status" => true,
+                    "message" => "servicers found successfully",
+                    "data" => $servicers
+                ];
+    
+                return response()->json($responseArray);            }
+
+            $responseArray = [
+                "status" => true,
+                "message" => "servicers not found",
+                "data" => []
+            ];
+
+            return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiGetUser(Request $request)
+    {
+        try {
+
+            $rules = [
+                'id' => 'required',
+            ];
+    
+            $errorMessages = [];
+    
+            $validator = Validator::make($request->all(), $rules, $errorMessages);
+    
+            if ($validator->fails()) {
+    
+                $responseArray = [
+                    "status" => false,
+                    "message" => ERROR_MSG_UNABLE_TO_PERFORM_THIS_ACTION,
+                    "data" => $validator->messages()
+                ];
+    
+                return response()->json($responseArray);
+            } 
+
+            $user = User::where('id',$request->id)->first();
+            if($user)
+            {
+                $responseArray = [
+                    "status" => true,
+                    "message" => "user found successfully",
+                    "data" => $user
+                ];
+    
+                return response()->json($responseArray);            }
+
+            $responseArray = [
+                "status" => true,
+                "message" => "user not found",
+                "data" => []
+            ];
+
+            return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
+        }
+    }
+
+    function apiPostDeleteUser(Request $request)
+    {
+        try {
+
+            $rules = [
+                'id' => 'required',
+            ];
+    
+            $errorMessages = [];
+    
+            $validator = Validator::make($request->all(), $rules, $errorMessages);
+    
+            if ($validator->fails()) {
+    
+                $responseArray = [
+                    "status" => false,
+                    "message" => ERROR_MSG_UNABLE_TO_PERFORM_THIS_ACTION,
+                    "data" => $validator->messages()
+                ];
+    
+                return response()->json($responseArray);
+            } 
+
+            $user = User::where('id',$request->id)->delete();
+            if($user)
+            {
+                $responseArray = [
+                    "status" => true,
+                    "message" => "user deleted successfully",
+                    "data" => $user
+                ];
+    
+                return response()->json($responseArray);            }
+
+            $responseArray = [
+                "status" => true,
+                "message" => "user not deleted",
+                "data" => []
+            ];
+
+            return response()->json($responseArray);
+
+        } catch (Exception $e) {
+            //throw $th;
+            $responseArray = [
+                "status" => false,
+                "message" => "Exception occur",
+                "data" => [
+                    "error" => $e->getMessage()
+                ]
+            ];
+
+            return response()->json($responseArray);
         }
     }
 }

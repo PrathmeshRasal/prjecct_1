@@ -59,13 +59,33 @@ Route::prefix('account')->group(function () {
 Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('user-approval', [UserController::class, 'apiUserApproval']);
 
-    Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-customer-post-update-machine-details');
+    Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-admin-post-update-machine-details');
+
+    Route::get('/customer-list', [UserAccountController::class, 'apiGetCustomerList'])->name('api-admin-get-customer-list');
+
+    Route::get('/servicer-list', [UserAccountController::class, 'apiGetServicerList'])->name('api-admin-get-servicer-list');
+
+    Route::get('/get-user', [UserAccountController::class, 'apiGetUser'])->name('api-admin-get-user');
+
+    Route::post('/delete-user', [UserAccountController::class, 'apiPostDeleteUser'])->name('api-admin-delete-user');
+
+    Route::get('/service-request-list', [CustomerController::class, 'apiGetServiceRequestList'])->name('api-admin-get-service-request-list');
+
+    Route::get('/service-request-open-list', [CustomerController::class, 'apiGetServiceRequestOpenList'])->name('api-admin-get-service-request-open-list');
+
+    Route::get('/service-request', [CustomerController::class, 'apiGetServiceRequest'])->name('api-admin-get-service-request');
 
 });
 
 Route::prefix('servicer')->middleware(['auth:sanctum', 'servicer'])->group(function () {
 
-    Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-customer-post-update-machine-details');
+    Route::post('/update-machine-details', [CustomerController::class, 'apiUpdateMachinedetails'])->name('api-servicer-post-update-machine-details');
+
+    Route::get('/service-request-open-list', [CustomerController::class, 'apiGetServiceRequestOpenList'])->name('api-servicer-get-service-request-open-list');
+
+    Route::get('/service-request-accepted-list', [CustomerController::class, 'apiGetServiceRequestAcceptedList'])->name('api-servicer-get-service-request-accepted-list');
+
+    Route::get('/service-request', [CustomerController::class, 'apiGetServiceRequest'])->name('api-servicer-get-service-request');
 
 });
 
