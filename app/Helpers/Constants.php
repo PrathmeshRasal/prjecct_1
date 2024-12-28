@@ -1,6 +1,6 @@
 <?php
 
-define('ADMIN_MAIL', "sales@hariomengineering.com");
+define('ADMIN_MAIL', "prathmeshrasal2003@gmail.com");
 
     define('IS_ACTIVE_YES', 1);
     define('IS_ACTIVE_NO', 0);
@@ -8,6 +8,7 @@ define('ADMIN_MAIL', "sales@hariomengineering.com");
     define('USER_TYPE_ADMIN', 1);
     define('USER_TYPE_CUSTOMER', 2);
     define('USER_TYPE_STORE_EMPLOYEE', 3);
+    define('USER_TYPE_BUSINESS', 4);
 
     define('MIN_PRODUCT_INT_VALUE', 10000000);
     define('MAX_PRODUCT_INT_VALUE', 16777215);

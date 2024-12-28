@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Hariom;
+namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use App\Mail\AdminServiceRequestMail;
