@@ -41,10 +41,11 @@ class UserAccountController extends Controller
                 'user_type' =>  USER_TYPE_ADMIN
             );
 
+            // dd(Auth::attempt($authArray));
             if(Auth::attempt($authArray)) {
 
                 $authUser = Auth::user();
-                if(Auth::user()->user_type!=2)
+                if(Auth::user()->user_type!=USER_TYPE_ADMIN)
                 {
                     $jsonResponse = array(
                         'status'    =>  false,

@@ -5,8 +5,8 @@ define('ADMIN_MAIL', "sales@hariomengineering.com");
     define('IS_ACTIVE_YES', 1);
     define('IS_ACTIVE_NO', 0);
 
-    define('USER_TYPE_CUSTOMER', 1);
-    define('USER_TYPE_ADMIN', 2);
+    define('USER_TYPE_ADMIN', 1);
+    define('USER_TYPE_CUSTOMER', 2);
     define('USER_TYPE_STORE_EMPLOYEE', 3);
 
     define('MIN_PRODUCT_INT_VALUE', 10000000);
